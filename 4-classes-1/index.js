@@ -23,4 +23,4 @@ const newItems = items.map((item) => new Product(item));
 // new destination
 const pathToFileToWrite = path.resolve(__dirname, 'result.json');
 
-fs.writeFileSync(pathToFileToWrite, JSON.stringify(newItems, null, 4));
+fs.writeFileSync(pathToFileToWrite, JSON.stringify(newItems, null, 4), encoding = 'utf8');
