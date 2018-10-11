@@ -1,0 +1,52 @@
+[
+    {
+        "title": "Milk",
+        "rubles": "90",
+        "dollars": "1.32"
+    },
+    {
+        "title": "Eggs",
+        "rubles": "120",
+        "dollars": "1.76"
+    },
+    {
+        "title": "Cookies",
+        "rubles": "50",
+        "dollars": "0.74"
+    },
+    {
+        "title": "Cigarettes",
+        "rubles": "99.9",
+        "dollars": "1.47"
+    },
+    {
+        "title": "Meat",
+        "rubles": "200",
+        "dollars": "2.94"
+    },
+    {
+        "title": "Fish",
+        "rubles": "250",
+        "dollars": "3.68"
+    },
+    {
+        "title": "Shrimps",
+        "rubles": "500",
+        "dollars": "7.35"
+    },
+    {
+        "title": "Lobster",
+        "rubles": "1000",
+        "dollars": "14.70"
+    },
+    {
+        "title": "Yogurt",
+        "rubles": "44",
+        "dollars": "0.65"
+    },
+    {
+        "title": "Whiskey",
+        "rubles": "400",
+        "dollars": "5.88"
+    }
+]
