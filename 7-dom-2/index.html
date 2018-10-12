@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Slider</title>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        * {
+            cursor: default;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items : center;
+            }
+
+        .arrow {
+            width: 20px;
+            margin: 5px;
+            border: 0;
+            font-size: 30px;
+            color: navy;
+            }
+
+        .content {
+            width: 460px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .big-frame {
+            width: 460px;
+            height: 330px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            }
+        
+        .top-frame {
+            width: 460px;
+            height: 35px;
+            text-align: center;
+            top: 20px;
+            position: relative;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .top-left {
+            width: 200px;
+            height: 35px;
+            text-align: left;
+            color: crimson;
+        }
+
+        .top-right {
+            width: 200px;
+            height: 35px;
+            text-align: right;
+            color: navy;
+        }
+
+        .bottom-frame {
+            width: 460px;
+            height: 35px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circle {
+            height: 14px;
+            width: 14px;
+            background-color: white;
+            border-radius: 50%;
+            border: 1px solid navy;
+            display: inline-block;
+            margin: 3px;
+            font-size: 10px;
+            font-weight: 300;
+            text-align: center;
+            color:white;
+        }
+
+        .circle-current {
+            background-color: navy;
+        }
+
+        .slide-window {
+            width: 400px;
+            height: 300px;
+            margin: 0 auto;
+            padding: 0;
+            overflow: hidden;
+            text-align: center;
+            }
+
+        .many-slides {
+            /* width: 100%; */
+            height: 100%;
+            margin: 0 auto;
+            position: relative;
+            left: -100%;
+            transition: transform 1s ease-in-out;
+            }
+
+        .each-slide {
+            float: left;
+            margin: 0 auto;
+            color: white;
+            width: 400px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: crimson;
+            border-radius: 5%;
+            border: 3px white solid;
+            box-sizing: border-box;
+            font-size:100px;
+            }
+
+    </style>
+
+</head>
+
+<!-- <body data-slides="1,2"> -->
+<!-- <body data-slides="🐏, 🦏, 🐁, 🦉, 🦔,🦇,🦌, 🐋,🐡, 🐌, 🐞, 🦂, 🐢,🐓,🐪, 🐘"> -->
+<body data-slides="🐏, 🦏, 🐁, 🦉, 🦔,🦇,🦌, 🐋">
+<!-- <body data-slides=""> -->
+<!-- <body data-slides="A,B,C,D,E,F"> -->
+
+    <script type="text/javascript">
+        (() => {
+
+            // your code...
+
+            // константы
+
+            const ANIMATION_INTERVAL = 4000;
+            const WAIT_BEFORE_START_ANIMATION = 2000;
+            const FRAME_SHIFT_PIXELS = 400;
+            
+            // переменные
+            
+            let currentIndex = 0;
+            let startTimer = -1;
+            let intervalTimer = -1;
+
+            // Получение данных из атрибутов в тэге body.
+
+            const $body = document.querySelector('[data-slides]');
+
+            let slidesContent = $body.getAttribute('data-slides').split(',');
+            slidesContent = slidesContent.map(slide => slide.trim());
+
+            const numberElements = slidesContent.length;
+
+            if ((numberElements === 1) && (slidesContent[0] === ''))
+                slidesContent = ['-'];
+
+            // Создание элементов
+
+            const $content = document.createElement('div');
+            $content.classList.add('content');
+
+            const $topFrame = document.createElement('div');
+            $topFrame.classList.add('top-frame');
+
+            const $topLeft = document.createElement('div');
+            $topLeft.classList.add('top-left');
+            $topLeft.innerHTML = '';
+
+            const $topRight = document.createElement('div');
+            $topRight.classList.add('top-right');
+            $topRight.innerHTML = '1/' + numberElements;
+
+            $topFrame.appendChild($topLeft);
+            $topFrame.appendChild($topRight);
+
+            const $bottomFrame = document.createElement('div');
+            $bottomFrame.classList.add('bottom-frame');
+
+            // пагинатор
+            let i = 0;
+            const $circles = slidesContent.map(slide => {
+                const $circle = document.createElement('div');
+                $circle.classList.add('circle');
+                $circle.setAttribute('data-circle', i++);
+                // $circle.textContent = i;
+                $bottomFrame.appendChild($circle);
+                return $circle;
+            });
+
+            $circles[0].classList.add('circle-current');
+
+            // Компоновка слайдера
+
+            const $bigFrame = document.createElement('div');
+            $bigFrame.classList.add('big-frame');
+
+            const $leftArrow = document.createElement('div');
+            $leftArrow.classList.add('arrow');
+            $leftArrow.setAttribute('data-step', '1');
+            $leftArrow.textContent = '⯇';
+
+            const $rightArrow = document.createElement('div');
+            $rightArrow.classList.add('arrow');
+            $rightArrow.setAttribute('data-step', '-1');
+            $rightArrow.textContent = '⯈';
+
+            const $outer = document.createElement('div');
+            $outer.classList.add('slide-window');
+
+            // Внутрений div для одновременного хранения кадров
+            const $inner = document.createElement('div');
+            $inner.classList.add('many-slides');
+            $inner.style.width = (numberElements + 1) * 100 + '%';
+            $inner.setAttribute('data-moving', '0');
+
+            // Фреймы для слайдера
+            const $frames = slidesContent.map(slide => {
+
+                const $frame = document.createElement('div');
+                $frame.textContent = slide;
+
+                $frame.classList.add('each-slide');
+                $inner.appendChild($frame);
+
+                return $frame;
+            });
+
+            // дополнительный фрейм слева (последний элемент)
+            const $frameFirst = document.createElement('div');
+            $frameFirst.classList.add('each-slide');
+            $frameFirst.textContent = slidesContent[numberElements - 1];
+            $inner.insertBefore($frameFirst, $inner.childNodes[0]);
+
+            // дополнительный фрейм в конце (пока не добавляем)
+            const $frameLast = document.createElement('div');
+            $frameLast.classList.add('each-slide');
+            $frameLast.textContent = slidesContent[0];
+
+            // Отображаем все в нужном порядке
+
+            if (numberElements > 1) $bigFrame.appendChild($leftArrow);
+
+            $outer.appendChild($inner);
+            $bigFrame.appendChild($outer);
+
+            if (numberElements > 1) $bigFrame.appendChild($rightArrow);
+
+            $content.appendChild($topFrame);
+            $content.appendChild($bigFrame);
+            $content.appendChild($bottomFrame);
+
+            $body.appendChild($content);
+
+
+
+            // Анимация и другие динамические события
+            
+            // Сдвиг
+            const slideMe = (step) => {
+
+                const $inner = document.querySelector('.many-slides');
+
+                // флаг действует во время анимации
+                // чтобы несколько кликов не помешали
+                $inner.setAttribute('data-moving', '1');
+
+                const translateValue = 'translate(' + step * FRAME_SHIFT_PIXELS + 'px)';
+                $inner.style.transform = translateValue;
+
+                // Пагинатор
+                $circles[currentIndex].classList.toggle('circle-current');
+                currentIndex = (currentIndex - step + numberElements) % numberElements;
+                $circles[currentIndex].classList.toggle('circle-current');
+
+                // Информация
+                $topRight.innerHTML = (currentIndex + 1) + '/' + numberElements;
+            }
+
+            // Нажатие на пагинатор.
+            const paginator = (circle) => {
+                if (currentIndex === circle) return;
+                slideMe(currentIndex - circle);
+            };
+
+            // Обработчик события кликов
+            document.body.addEventListener('click', (event) =>{
+                
+                // если меньше 2-х элементов, то слайдер не нужен
+                if (numberElements < 2) return;
+
+                const target = event.target;
+                
+                // ожидаем конца анимации, клик не обрабатываем
+                const $inner = document.querySelector('.many-slides');
+                if ($inner.getAttribute('data-moving') === '1') return;
+
+                // фильтр кликов по активным зонам
+                // если активная зона - сбрасываем автоматическую анимацию и ожидание простоя
+                // игнорируем остальные клики
+
+                if (target.hasAttribute('data-circle')||target.classList.contains('arrow')) {
+                    clearTimeout(startTimer);
+                    clearInterval(intervalTimer);
+                    $topLeft.innerHTML = '';
+                }      
+                else return;
+
+                if (target.hasAttribute('data-circle')) 
+                    paginator(event.target.getAttribute('data-circle'));
+
+                if (target.hasAttribute('data-step')) 
+                    slideMe(target.getAttribute('data-step'));
+
+                // Запускаем ожидание простоя
+                startMe();
+
+            });
+
+            // По завершении transition - пересоздаем внутренний слайдер inner,
+            // чтобы сбросить transition по transfer
+            // Событие ловим на окружающем элементе, так как элемент inner пересоздается.
+
+            $outer.addEventListener('transitionend', (event) => {
+
+                // console.log("timer: " + intervalTimer + ",start: " + startTimer);
+
+                if (!event.target.classList.contains('many-slides')) return;
+
+                const $oldInner = event.target;
+                $oldInner.parentElement.removeChild($oldInner);
+
+                // новый inner
+                const $inner = document.createElement('div');
+                $inner.classList.add('many-slides');
+                $inner.setAttribute('data-moving', '0');
+
+                let addOn = 0;
+                if (currentIndex === 0) {
+                    $inner.appendChild($frameFirst);
+                    addOn = 1;
+                }
+
+                $frames.map($frame => $inner.appendChild($frame));
+
+                if (currentIndex === numberElements - 1) {
+                    $inner.appendChild($frameLast);
+                    addOn = 1;
+                }
+
+                $inner.style.left = '-' + 100 * (currentIndex + ((currentIndex === 0) ? 1 : 0)) + '%';
+                $inner.style.width = (numberElements + addOn) * 100 + '%';
+
+                $outer.appendChild($inner);
+            });
+
+            // Функция запуска таймеров.
+            const startMe = () => {
+                startTimer = setTimeout(() => {
+                    intervalTimer = setInterval(() => slideMe(-1), ANIMATION_INTERVAL);
+                    $topLeft.innerHTML = 'auto';
+                 }, WAIT_BEFORE_START_ANIMATION);
+            }
+
+            // Запуск автоматической анимации
+            if (numberElements > 1) startMe();
+
+        })();
+    </script>
+</body>
+
+</html>
