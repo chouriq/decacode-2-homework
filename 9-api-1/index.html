@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Breweries</title>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            justify-content:left;
+            align-items : top;
+            background-color: darkslategray;
+            color:goldenrod;
+        }
+
+        li {
+            background-color:   black;
+            width: 500px;
+            overflow:hidden;
+            border:5px;
+            margin: 0px;
+            margin-bottom: 5px;
+            margin-left: -35px;
+            list-style-position: inside;
+            height: 20px;
+            transition: height 1s ease;
+            color:gold;
+        }
+
+        div {
+            color:goldenrod;
+        }
+
+        li:hover {
+            height: 260px;
+            transition: height 1s ease-out;
+        }
+        
+        .item {
+            font-weight: 500;
+            text-indent: 30px;
+        }
+
+        div.oltitle {
+            margin-left: -35px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+    
+    </style>
+
+</head>
+
+<body>
+    <div class="content">
+        <div>
+            <input type="text" placeholder="что ищем?" />
+        </div>
+        <div>
+            <button type="button" id="search">Найти</button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (() => {
+
+            // your code...
+
+            const BREWERIES_URL = `https://api.openbrewerydb.org/breweries`;
+            const NOT_FOUND = 'Ничего не найдено';
+            const OL_TITLE = 'Пивоварни:';
+            const END_FOUND = 'Больше результатов нет';
+            const MORE = 'Ещё';
+
+            let query = '';
+            let isLoading = false;
+            let page = 1;
+
+            const $input = document.querySelector('input');
+            const $content = document.querySelector('.content');
+
+            const $oltitle = document.createElement('div');
+            $oltitle.classList.add('oltitle');
+
+            const $endText = document.createElement('div');
+
+            let $more = document.createElement('button');
+
+            $more.type = 'button';
+            $more.textContent = MORE;
+
+            const $searchButton = document.getElementById('search');
+
+            const $info = document.querySelector('.info');
+
+            // Функция запрашивает пивоварни
+            // Выводит на экран не больше 20 объектов
+            // Если ничего не найдено, то сообщает об этом
+            const getBeer = () => {
+
+                const $ol = document.querySelector('ol');
+
+                if (!isLoading) {
+                    isLoading = true;
+
+                    fetch(BREWERIES_URL + query + '&page=' + String(page)).
+                    then(response => response.json()).
+                    then(data => {
+
+                        if (page === 1) {
+                            if (data.length === 0) {
+                                $oltitle.textContent = NOT_FOUND;
+                                $endText.textContent = '';
+                            }
+                            $ol.append($oltitle);
+                        } else $more = $content.removeChild($more);
+
+                        data.map((item) => {
+                            const keys = Object.keys(item);
+                            let line = '';
+
+                            keys.map((key) => {
+                                if (key == 'name')
+                                    line = item[key] + line;
+                                line += '<div>' + key + ': ' + item[key] +
+                                    '</div>';
+                            })
+
+                            const $li = document.createElement('li');
+                            $li.classList.add('item');
+                            $li.innerHTML = line;
+                            $ol.append($li);
+                        });
+
+                        if (data.length === 20)
+                            $content.append($more);
+                        else {
+                            if ($content.contains($more))
+                                $more = $content.removeChild($more);
+                            $ol.append($endText);
+                        }
+
+                        isLoading = false;
+                        page++;
+                    });
+                };
+            }
+
+
+            $input.addEventListener("keyup", (event) => {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    $searchButton.click();
+                }
+            });
+
+            // При нажатии на кнопку поиска
+            // стирается предыдущая информация.
+            // Запускается непосредственный запрос
+            $searchButton.addEventListener('click', () => {
+
+                if ($content.contains($more))
+                    $more = $content.removeChild($more);
+
+                query = '?by_name=' + $input.value;
+
+                let $ol = document.querySelector('ol');
+
+                if ($ol !== null)
+                    $ol.parentNode.removeChild($ol);
+
+                $ol = document.createElement('ol');
+                $ol.type = '1';
+                $content.append($ol);
+
+                page = 1;
+                $endText.textContent = END_FOUND;
+                $oltitle.textContent = OL_TITLE;
+                
+                getBeer();
+            });
+
+            $more.addEventListener('click', () => getBeer());
+
+        })();
+    </script>
+
+</body>
+
+</html>
