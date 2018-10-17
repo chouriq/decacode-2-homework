@@ -123,11 +123,11 @@
                             $ol.append($oltitle);
                         } else $more = $content.removeChild($more);
 
-                        data.map((item) => {
+                        data.forEach((item) => {
                             const keys = Object.keys(item);
                             let line = '';
 
-                            keys.map((key) => {
+                            keys.forEach((key) => {
                                 if (key == 'name')
                                     line = item[key] + line;
                                 line += '<div>' + key + ': ' + item[key] +
