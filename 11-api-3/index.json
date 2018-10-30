@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "title": "Apples",
+    "count": 110
+  },
+  {
+    "id": "2",
+    "title": "Milk",
+    "count": 1,
+    "state": "skimmed"
+  },
+  {
+    "id": "4",
+    "title": "Tomatoes",
+    "count": 10
+  },
+  {
+    "id": "6",
+    "title": "Cheese",
+    "count": 1
+  },
+  {
+    "id": "7",
+    "title": "Chicken",
+    "count": 33
+  },
+  {
+    "id": "8",
+    "title": "Chicken",
+    "count": 1,
+    "state": "frozen"
+  },
+  {
+    "id": "9",
+    "title": "Juice",
+    "count": 3
+  },
+  {
+    "id": "10",
+    "title": "Cream",
+    "count": 4
+  },
+  {
+    "id": "11",
+    "title": "Cookie",
+    "count": 15,
+    "condition": "bad"
+  },
+  {
+    "id": "12",
+    "title": "Bananas",
+    "count": 19,
+    "color": "yellow"
+  }
+]
