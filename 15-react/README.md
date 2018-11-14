@@ -2,7 +2,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Рецепты
 
-- Приложение сделано на React.
+- Приложение сделано на React + React Roouter.
 - Выделено 3 компонента: App верхнего уровня, Search и Favorite нижнего
 - Состояние приложения (App, Search, Favorite) контролируется только в App
 - Search:
@@ -14,7 +14,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
     - во время осуществления запроса появляется информация о том, что идет поиск
 - Favorite:
     - в списке отображается список Избранных рецептов
-    - каждый рецепт можно удалить, нажав на соответствующую клавишу
+    - каждый рецепт можно удалить, нажав на соответствующую кнопку
     - рецепты сохраняются в localStorage после каждого апдейта
     - сделана связь с Google Sheet:
         - при загрузке приложения производится попытка инициализации Google API, если все прошло успешно,
