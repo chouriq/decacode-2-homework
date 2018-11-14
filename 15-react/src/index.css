@@ -1,0 +1,102 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size:14px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.link {
+  margin-right:10px;
+}
+
+.hide {
+  display:none;
+}
+
+.show {
+  display:flex;
+}
+
+.main {
+  position:absolute;
+  left:50px;
+  top:10px;
+}
+
+ul {
+  /* list-style-position: inside; */
+  list-style-type:none;
+}
+
+li {
+  width:500px;
+  margin-left:-40px;
+}
+
+li.search {
+  border-top: solid 1px lightskyblue;
+  background-color: aliceblue;
+}
+
+li.favs {
+  border-top: solid 1px yellowgreen;
+  background-color: palegreen;
+}
+
+p {
+  margin-left: 10px;
+}
+
+h4 {
+  margin-left: 10px;
+}
+
+p.fav {
+  color:crimson;
+  font-size: 10px;
+  position: relative;
+  left: 380px;
+  top: -10px;
+  width: 110px;
+  text-align:center;
+}
+
+p.inFavs {
+  color: green;
+  font-size: 10px;
+  position: relative;
+  left: 380px; 
+  width: 110px;
+  top: -10px;
+  text-align:center;
+}
+
+p.fav:hover {
+  background-color: yellow;
+  cursor: pointer;
+}
+
+div.waiting {
+  height: 10px;
+  color: red;
+}
+
+div.searchForm {
+  height: 50px;
+  margin-top:10px;
+}
+
+div.sheets {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
