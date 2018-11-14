@@ -112,7 +112,7 @@ class Favorite extends Component {
     this.props.getInformationText('','Favs')
   }
 
- // Рендеринг элементов происходит по одной схеме с компонентом Search
+ // Рендеринг элементов происходит по одной схеме (class=searchForm) с компонентом Search
  // для однообразности интерфейса
   render() {
     return (

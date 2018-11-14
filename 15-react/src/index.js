@@ -25,7 +25,6 @@ const initClient = () =>
         discoveryDocs: googleParameters.DISCOVERY_DOCS,
         scope: googleParameters.SCOPES
     }).then(() => {
-        
         ReactDOM.render(
             <Router>
                 <App init='success'/>

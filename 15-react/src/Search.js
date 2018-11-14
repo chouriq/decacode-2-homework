@@ -44,7 +44,7 @@ class Search extends Component {
         this.props.addFavsToApp(item);
     }
 
-    // Рендеринг элементов происходит по одной схеме с компонентом Favorite
+    // Рендеринг элементов происходит по одной схеме (class=searchForm) с компонентом Favorite
     // для однообразности интерфейса
     render() {
         return (

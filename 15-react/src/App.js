@@ -8,9 +8,12 @@ const text2 = `Избранное`;
 const text3 = `Что ищем?`;
 const EMPTY = ``;
 
+// Загрузка данных из localStorage
 const favsOnLoad = JSON.parse(window.localStorage.getItem('favs')) || [];
 const favsKeysOnLoad = favsOnLoad.map((elem) => elem.href) || [];
 
+
+// Состояния хранится только в App
 class App extends Component {
   constructor(props) {
     super(props);
@@ -26,6 +29,7 @@ class App extends Component {
     }
   }
 
+  // Информационные сообщения
   getInformationText = (text, source) => {
     if (source === 'Search')
       this.setState({
@@ -37,10 +41,12 @@ class App extends Component {
       })
   }
 
+  // Обновление статуса пользователя(залогинен, нет)
   receiveLogonStatus = (isGoogleUserAuthorized) => {
     this.setState({isGoogleUserAuthorized:isGoogleUserAuthorized});
   }
 
+  // Получение данных из поиска
   getItemsFromSearch = (itemsFromSearch, searchWord, informationText) => {
     this.setState({
         items: itemsFromSearch,
@@ -48,6 +54,8 @@ class App extends Component {
         informationTextSearch: informationText})
   };
 
+  // Добавление рецепта в избранное
+  // Ключ - href
   addFavsFromSearch = (item) => {
     this.setState({
       favs: this.state.favs.filter((elem) => (elem.href !== item.href)).concat(item),
@@ -55,6 +63,9 @@ class App extends Component {
     });
   }
 
+
+  // Удаление рецепта из избранного
+  // Ключ - href
   removeFavsFromFavs = (item) => {
     this.setState({
       favs:  this.state.favs.filter((elem) => (elem.href !== item.href)),
@@ -62,6 +73,8 @@ class App extends Component {
     });
   }
 
+  // Загрузка избранного из Google листа
+  // Если пустой - то обнуление избранного
   loadFavsFromGoogleSheets = (items) => {
     if (items.length>0)
     this.setState({
@@ -79,6 +92,8 @@ class App extends Component {
     })
   }
 
+  // При каждом обновлении - запись в localStorage
+  // для синхронизации данных
   render() {
     window.localStorage.setItem('favs', JSON.stringify(this.state.favs));
     return (
